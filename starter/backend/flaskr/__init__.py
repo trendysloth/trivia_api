@@ -42,6 +42,9 @@ def create_app(test_config=None):
   def get_categories():
     categories = Category.query.all()
     categories_to_return = {}
+    if len(categories) == 0:
+      abort(404)
+
     for category in categories:
       categories_to_return[category.id] = category.type
     return jsonify({
@@ -65,6 +68,10 @@ def create_app(test_config=None):
   def get_questions():
     questions = Question.query.all()
     categories = Category.query.all()
+
+    if (len(paginate_responses(questions)) == 0):
+      abort(404)
+
     return jsonify({
       'success': True,
       'questions': paginate_responses(questions),
@@ -111,7 +118,7 @@ def create_app(test_config=None):
       search_term = body.get('searchTerm')
 
       # query the database using search term
-      selection = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
+      selection = Question.query.filter(Question.question.ilike('{}'.format(search_term))).all()
 
       # 404 if no results found
       if (len(selection) == 0):
@@ -226,7 +233,7 @@ def create_app(test_config=None):
     return jsonify({
       "success": False,
       "error": 422,
-      'message": "request unprocessable"
+      "message": "request unprocessable"
     }), 422
   
   @app.errorhandler(404)
@@ -236,5 +243,5 @@ def create_app(test_config=None):
       "error": 404,
       "message": "resource not found"
     }), 404
-    
+
   return app
