@@ -174,6 +174,9 @@ def create_app(test_config=None):
   def get_questions_by_category(category_id):
     try:
       selected_questions = Question.query.filter(Question.category == str(category_id)).all()
+      if (len(selected_questions) == 0):
+        abort(404)
+      
       return jsonify({
         'success': True,
         'questions': paginate_responses(selected_questions),
@@ -182,7 +185,7 @@ def create_app(test_config=None):
         'categories': category_id
       })
     except:
-      abort(404)
+      abort(422)
 
   '''
   @TODO: 
@@ -213,15 +216,17 @@ def create_app(test_config=None):
     body = request.get_json()
     previous = body.get('previous_questions')
     category = body.get('quiz_category')
+    # print(previous, category) 
     try:
       questions = Question.query.filter_by(category=category['id']).all()
       random_question = generate_random_question(questions, previous)
+      # print(random_question)
       return jsonify({
         'success': True,
         'question': random_question.format()
       })
     except:
-      abort(422)
+      abort(400)
 
   '''
   @TODO: 
@@ -243,5 +248,13 @@ def create_app(test_config=None):
       "error": 404,
       "message": "resource not found"
     }), 404
+
+  @app.errorhandler(400)
+  def not_found(error):
+    return jsonify({
+      "success": False,
+      "error": 400,
+      "message": "bad request"
+    }), 400
 
   return app
