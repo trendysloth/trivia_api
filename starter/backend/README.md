@@ -66,26 +66,213 @@ One note before you delve into your tasks: for each endpoint you are expected to
 8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
 9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
 
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
 GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
+{
+    '1' : "Science",
+    '2' : "Art",
+    '3' : "Geography",
+    '4' : "History",
+    '5' : "Entertainment",
+    '6' : "Sports"
+}
+
+GET '/questions'
+- Fetches a list of paginated questions
+- Request Arguments: None
+- Returns: An object with categories, current_category, number of total questions, and a list of questions that include answers, categories, difficulties and ids.
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Apollo 13", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 2, 
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    }, 
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
+      "answer": "Edward Scissorhands", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 6, 
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 6, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }, 
+    {
+      "answer": "Escher", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 19
+}
+
+DELETE '/questions/<int:id>'
+- Delete a question by id using url parameters
+- Request Arguments: question id
+- Returns: An object that contains the id of the deleted question upon success.
+{
+    "deleted": 10,
+    "success": true
+}
+
+POST '/questions'
+- Creates a new question or returns a question that contains a searched phrase
+    - Request Arguments (when creating a new question) : Question, answer, difficulty and category
+    {   
+        "question": "What is the heaviest organ in the human body?",
+        "answer": "The Liver", 
+        "difficulty": 4, 
+        "category": 1, 
+    }
+    - Returns: An object that contains the id of the inserted question upon success.
+    {
+        "created": 10
+        "success": true,
+    }    
+
+    - Request Arguments (when searching for a question): search term
+    - Returns: An object with a list of paginated questions and the number of total questions that contains the searched term
+    {
+        "questions": list of paginated questions,
+        "total_questions": len(Question.query.all()),
+        "success": true,
+    }
+
+GET '/categories/<int:id>/questions'
+- Fetches a list of questions by category id using the URL parameters
+- Request Arguments: category id
+- Returns : An object with category, current category, number of total questions and a list of paginated questions
+{
+  "categories": 1, 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 22, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }, 
+    {
+      "answer": "Coronavirus", 
+      "category": 1, 
+      "difficulty": 1, 
+      "id": 24, 
+      "question": "What's COVID_19?"
+    }, 
+    {
+      "answer": "Coronavirus", 
+      "category": 1, 
+      "difficulty": 1, 
+      "id": 25, 
+      "question": "Who's Donald Trump?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 5
+}
+
+POST '/quizzes'
+- Fetches a question that hasn't appeared in quizzes before by category id
+- Request Arguments: quiz category, previous questions
+{
+    "previous_questions: [],
+    "quiz_category: " {
+        "type": "Science", 
+        "id": "1"
+    }
+}
+- Returns an object with fetched question upon success
+{
+    "question": {
+        "answer": "Blood", 
+        "category": 1, 
+        "difficulty": 4, 
+        "id": 22, 
+        "question": "Hematology is a branch of medicine involving the study of what?"
+    }, 
+    "success": true
+}
+
+
+
 
 ```
 

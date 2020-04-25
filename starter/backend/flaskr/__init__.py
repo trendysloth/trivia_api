@@ -118,7 +118,7 @@ def create_app(test_config=None):
       search_term = body.get('searchTerm')
 
       # query the database using search term
-      selection = Question.query.filter(Question.question.ilike('{}'.format(search_term))).all()
+      selection = Question.query.filter(Question.question.ilike('%' + search_term + '%')).all()
 
       # 404 if no results found
       if (len(selection) == 0):
