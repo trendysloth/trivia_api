@@ -273,12 +273,6 @@ POST '/quizzes'
     "success": true
 }
 
-
-
-
-```
-
-
 ## Testing
 To run the tests, run
 ```
